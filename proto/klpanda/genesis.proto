@@ -1,0 +1,14 @@
+syntax = "proto3";
+package klpanda.klpanda.klpanda;
+
+import "gogoproto/gogo.proto";
+import "klpanda/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/klpanda/klpanda/x/klpanda/types";
+
+// GenesisState defines the klpanda module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
