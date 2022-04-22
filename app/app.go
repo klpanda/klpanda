@@ -104,7 +104,7 @@ import (
 )
 
 const (
-	AccountAddressPrefix = "klpanda"
+	AccountAddressPrefix = "hamsa"
 	Name                 = "klpanda"
 )
 
