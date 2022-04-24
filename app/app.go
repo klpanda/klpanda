@@ -97,6 +97,9 @@ import (
 
 	"github.com/klpanda/klpanda/docs"
 
+	dexmodule "github.com/klpanda/klpanda/x/dex"
+	dexmodulekeeper "github.com/klpanda/klpanda/x/dex/keeper"
+	dexmoduletypes "github.com/klpanda/klpanda/x/dex/types"
 	klpandamodule "github.com/klpanda/klpanda/x/klpanda"
 	klpandamodulekeeper "github.com/klpanda/klpanda/x/klpanda/keeper"
 	klpandamoduletypes "github.com/klpanda/klpanda/x/klpanda/types"
@@ -154,6 +157,7 @@ var (
 		vesting.AppModuleBasic{},
 		monitoringp.AppModuleBasic{},
 		klpandamodule.AppModuleBasic{},
+		dexmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -166,6 +170,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		dexmoduletypes.ModuleName:      {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -226,6 +231,8 @@ type App struct {
 	ScopedMonitoringKeeper capabilitykeeper.ScopedKeeper
 
 	KlpandaKeeper klpandamodulekeeper.Keeper
+
+	DexKeeper dexmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -263,6 +270,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey, monitoringptypes.StoreKey,
 		klpandamoduletypes.StoreKey,
+		dexmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -384,6 +392,16 @@ func New(
 	)
 	klpandaModule := klpandamodule.NewAppModule(appCodec, app.KlpandaKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.DexKeeper = *dexmodulekeeper.NewKeeper(
+		appCodec,
+		keys[dexmoduletypes.StoreKey],
+		keys[dexmoduletypes.MemStoreKey],
+		app.GetSubspace(dexmoduletypes.ModuleName),
+
+		app.BankKeeper,
+	)
+	dexModule := dexmodule.NewAppModule(appCodec, app.DexKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -425,6 +443,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		klpandaModule,
+		dexModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -452,6 +471,7 @@ func New(
 		paramstypes.ModuleName,
 		monitoringptypes.ModuleName,
 		klpandamoduletypes.ModuleName,
+		dexmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -475,6 +495,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		monitoringptypes.ModuleName,
 		klpandamoduletypes.ModuleName,
+		dexmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -503,6 +524,7 @@ func New(
 		feegrant.ModuleName,
 		monitoringptypes.ModuleName,
 		klpandamoduletypes.ModuleName,
+		dexmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -527,6 +549,7 @@ func New(
 		transferModule,
 		monitoringModule,
 		klpandaModule,
+		dexModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -717,6 +740,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(monitoringptypes.ModuleName)
 	paramsKeeper.Subspace(klpandamoduletypes.ModuleName)
+	paramsKeeper.Subspace(dexmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
