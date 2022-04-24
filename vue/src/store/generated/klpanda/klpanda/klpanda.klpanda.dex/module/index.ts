@@ -6,6 +6,7 @@ import { Registry, OfflineSigner, EncodeObject, DirectSecp256k1HdWallet } from "
 import { Api } from "./rest";
 import { MsgCancelSellOrder } from "./types/dex/tx";
 import { MsgSendCreatePair } from "./types/dex/tx";
+import { MsgCancelBuyOrder } from "./types/dex/tx";
 import { MsgSendSellOrder } from "./types/dex/tx";
 import { MsgSendBuyOrder } from "./types/dex/tx";
 
@@ -13,6 +14,7 @@ import { MsgSendBuyOrder } from "./types/dex/tx";
 const types = [
   ["/klpanda.klpanda.dex.MsgCancelSellOrder", MsgCancelSellOrder],
   ["/klpanda.klpanda.dex.MsgSendCreatePair", MsgSendCreatePair],
+  ["/klpanda.klpanda.dex.MsgCancelBuyOrder", MsgCancelBuyOrder],
   ["/klpanda.klpanda.dex.MsgSendSellOrder", MsgSendSellOrder],
   ["/klpanda.klpanda.dex.MsgSendBuyOrder", MsgSendBuyOrder],
   
@@ -49,6 +51,7 @@ const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions =
     signAndBroadcast: (msgs: EncodeObject[], { fee, memo }: SignAndBroadcastOptions = {fee: defaultFee, memo: ""}) => client.signAndBroadcast(address, msgs, fee,memo),
     msgCancelSellOrder: (data: MsgCancelSellOrder): EncodeObject => ({ typeUrl: "/klpanda.klpanda.dex.MsgCancelSellOrder", value: MsgCancelSellOrder.fromPartial( data ) }),
     msgSendCreatePair: (data: MsgSendCreatePair): EncodeObject => ({ typeUrl: "/klpanda.klpanda.dex.MsgSendCreatePair", value: MsgSendCreatePair.fromPartial( data ) }),
+    msgCancelBuyOrder: (data: MsgCancelBuyOrder): EncodeObject => ({ typeUrl: "/klpanda.klpanda.dex.MsgCancelBuyOrder", value: MsgCancelBuyOrder.fromPartial( data ) }),
     msgSendSellOrder: (data: MsgSendSellOrder): EncodeObject => ({ typeUrl: "/klpanda.klpanda.dex.MsgSendSellOrder", value: MsgSendSellOrder.fromPartial( data ) }),
     msgSendBuyOrder: (data: MsgSendBuyOrder): EncodeObject => ({ typeUrl: "/klpanda.klpanda.dex.MsgSendBuyOrder", value: MsgSendBuyOrder.fromPartial( data ) }),
     

@@ -48498,6 +48498,8 @@ definitions:
         type: string
       priceDenom:
         type: string
+  klpanda.klpanda.dex.MsgCancelBuyOrderResponse:
+    type: object
   klpanda.klpanda.dex.MsgCancelSellOrderResponse:
     type: object
   klpanda.klpanda.dex.MsgSendBuyOrderResponse:
