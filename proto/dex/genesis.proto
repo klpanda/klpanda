@@ -3,6 +3,7 @@ package klpanda.klpanda.dex;
 
 import "gogoproto/gogo.proto";
 import "dex/params.proto";
+import "dex/buy_order_book.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/klpanda/klpanda/x/dex/types";
@@ -11,5 +12,6 @@ option go_package = "github.com/klpanda/klpanda/x/dex/types";
 message GenesisState {
   Params params = 1 [(gogoproto.nullable) = false];
   string port_id = 2;
+  repeated BuyOrderBook buyOrderBookList = 3 [(gogoproto.nullable) = false];
   // this line is used by starport scaffolding # genesis/proto/state
 }
